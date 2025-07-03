@@ -1120,7 +1120,6 @@ while code_running == True:
             #     print("Error retrieving BMS pack capacity: " + data)
             # time.sleep(scan_interval/3)
             success, data = bms_getWarnInfo(bms,bat_read,batNumber=255)
-            print("Warning info " + data)
             if success != True:
                 print("Error retrieving BMS warning info: " + data)
             time.sleep(scan_interval/3)
