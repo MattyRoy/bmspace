@@ -1079,7 +1079,7 @@ client.publish(config['mqtt_base_topic'] + "/availability","offline")
 print_initial = True
 
 success, data = bms_getVersion(bms)
-print("BMS Version: " + data))
+print("BMS Version: " + data)
 if success != True:
     print("Error retrieving BMS version number")
 
