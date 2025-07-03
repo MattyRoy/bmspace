@@ -264,23 +264,22 @@ def ha_discovery():
             disc_payload['unit_of_measurement'] = "%"
             client.publish(config['mqtt_ha_discovery_topic']+"/sensor/BMS-" + bms_sn + "/" + disc_payload['name'].replace(' ', '_') + "/config",json.dumps(disc_payload),qos=0, retain=True)
 
-
             disc_payload.pop('unit_of_measurement')
 
-            # disc_payload['name'] = "Pack " + str(p) + " Warnings"
-            # disc_payload['unique_id'] = "bmspace_" + bms_sn + "_pack_" + str(p) + "_warnings"
-            # disc_payload['state_topic'] = config['mqtt_base_topic'] + "/pack_" + str(p) + "/warnings"
-            # client.publish(config['mqtt_ha_discovery_topic']+"/sensor/BMS-" + bms_sn + "/" + disc_payload['name'].replace(' ', '_') + "/config",json.dumps(disc_payload),qos=0, retain=True)
+            disc_payload['name'] = "Pack " + str(p) + " Warnings"
+            disc_payload['unique_id'] = "bmspace_" + bms_sn + "_pack_" + str(p) + "_warnings"
+            disc_payload['state_topic'] = config['mqtt_base_topic'] + "/pack_" + str(p) + "/warnings"
+            client.publish(config['mqtt_ha_discovery_topic']+"/sensor/BMS-" + bms_sn + "/" + disc_payload['name'].replace(' ', '_') + "/config",json.dumps(disc_payload),qos=0, retain=True)
 
-            # disc_payload['name'] = "Pack " + str(p) + " Balancing1"
-            # disc_payload['unique_id'] = "bmspace_" + bms_sn + "_pack_" + str(p) + "_balancing1"
-            # disc_payload['state_topic'] = config['mqtt_base_topic'] + "/pack_" + str(p) + "/balancing1"
-            # client.publish(config['mqtt_ha_discovery_topic']+"/sensor/BMS-" + bms_sn + "/" + disc_payload['name'].replace(' ', '_') + "/config",json.dumps(disc_payload),qos=0, retain=True)
+            disc_payload['name'] = "Pack " + str(p) + " Balancing1"
+            disc_payload['unique_id'] = "bmspace_" + bms_sn + "_pack_" + str(p) + "_balancing1"
+            disc_payload['state_topic'] = config['mqtt_base_topic'] + "/pack_" + str(p) + "/balancing1"
+            client.publish(config['mqtt_ha_discovery_topic']+"/sensor/BMS-" + bms_sn + "/" + disc_payload['name'].replace(' ', '_') + "/config",json.dumps(disc_payload),qos=0, retain=True)
 
-            # disc_payload['name'] = "Pack " + str(p) + " Balancing2"
-            # disc_payload['unique_id'] = "bmspace_" + bms_sn + "_pack_" + str(p) + "_balancing2"
-            # disc_payload['state_topic'] = config['mqtt_base_topic'] + "/pack_" + str(p) + "/balancing2"
-            # client.publish(config['mqtt_ha_discovery_topic']+"/sensor/BMS-" + bms_sn + "/" + disc_payload['name'].replace(' ', '_') + "/config",json.dumps(disc_payload),qos=0, retain=True)
+            disc_payload['name'] = "Pack " + str(p) + " Balancing2"
+            disc_payload['unique_id'] = "bmspace_" + bms_sn + "_pack_" + str(p) + "_balancing2"
+            disc_payload['state_topic'] = config['mqtt_base_topic'] + "/pack_" + str(p) + "/balancing2"
+            client.publish(config['mqtt_ha_discovery_topic']+"/sensor/BMS-" + bms_sn + "/" + disc_payload['name'].replace(' ', '_') + "/config",json.dumps(disc_payload),qos=0, retain=True)
 
 
             # # Binary Sensors
@@ -645,7 +644,7 @@ def bms_getPackNumber(bms):
     success, INFO = bms_request(bms,cid2=constants.cid2PackNumber)
 
     if success == False:
-        return(False,INFO)    
+        return(False,INFO)
 
     try:
         packNumber = int(INFO,16)
@@ -1079,20 +1078,21 @@ bms,bms_connected = bms_connect(config['bms_ip'],config['bms_port'])
 client.publish(config['mqtt_base_topic'] + "/availability","offline")
 print_initial = True
 
-# success, data = bms_getVersion(bms)
-# if success != True:
-#     print("Error retrieving BMS version number")
+success, data = bms_getVersion(bms)
+print("BMS Version: " + data))
+if success != True:
+    print("Error retrieving BMS version number")
 
-# time.sleep(0.1)
-# success, bms_sn,pack_sn = bms_getSerial(bms)
+time.sleep(0.1)
+success, bms_sn,pack_sn = bms_getSerial(bms)
+print("BMS serial: " + bms_sn + " pack serial: " + pack_sn)
 
-bms_sn = "version_21"
-pack_sn = "pack_sn_volta_sg1"
+#bms_sn = "version_21"
+#pack_sn = "pack_sn_volta_sg1"
 
-# if success != True:
-#     print("Error retrieving BMS and pack serial numbers. This is required for HA Discovery. Exiting...")
+if success != True:
+    print("Error retrieving BMS and pack serial numbers. This is required for HA Discovery. Exiting...")
 #     quit()
-
 
 while code_running == True:
 
@@ -1119,10 +1119,11 @@ while code_running == True:
             # if success != True:
             #     print("Error retrieving BMS pack capacity: " + data)
             # time.sleep(scan_interval/3)
-            # success, data = bms_getWarnInfo(bms,bat_read,batNumber=255)
-            # if success != True:
-            #     print("Error retrieving BMS warning info: " + data)
-            # time.sleep(scan_interval/3)
+            success, data = bms_getWarnInfo(bms,bat_read,batNumber=255)
+            print("Warning info " + data)
+            if success != True:
+                print("Error retrieving BMS warning info: " + data)
+            time.sleep(scan_interval/3)
 
             bat_read = bat_read + 1
 
